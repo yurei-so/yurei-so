@@ -10,13 +10,19 @@
 ![Typescript](https://img.shields.io/badge/Typescript-121212?style=flat-square&logo=typescript)
 ![Siemens](https://img.shields.io/badge/Siemens-009999?style=flat-square)
 
-```md
+*Heyo, I'm*
+
+```ruby
      _|      _|  _|_|_|_|                      _|                          
        _|  _|              _|  _|_|    _|_|              _|_|_|    _|_|    
          _|      _|    _|  _|_|      _|_|_|_|  _|      _|_|      _|    _|  
          _|      _|    _|  _|        _|        _|          _|_|  _|    _|  
          _|        _|_|_|  _|          _|_|_|  _|  _|  _|_|_|      _|_|    
 ```
+
+— a mechatronics engineer building AI systems, robotics, research tools, and signal-processing systems.
+
+---
 
 Most of my projects start from a "what if" or _a minor inconvenience_.
 </div>
