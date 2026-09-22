@@ -24,5 +24,5 @@
 
 ---
 
-Most of my projects start from a "what if" or _a minor inconvenience_.
+🦊 Most of my projects start from a "what if" or _a minor inconvenience_.
 </div>
