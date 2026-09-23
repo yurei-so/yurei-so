@@ -12,7 +12,7 @@
 ![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat-square&logo=linux&logoColor=000000)
 
 ![🧪 experiments published: 52](https://img.shields.io/badge/%F0%9F%A7%AA%20experiments%20published-52-6f42c1?style=flat-square)
-![🖍️ crayon confiscations: 0](https://img.shields.io/badge/%F0%9F%96%8D%EF%B8%8F%20crayon%20confiscations-0-e83e8c?style=flat-square)
+![🖍️ crayon confiscations: 1](https://img.shields.io/badge/%F0%9F%96%8D%EF%B8%8F%20crayon%20confiscations-1-e83e8c?style=flat-square)
 
 </div>
 <!-- profile-badges:end -->
