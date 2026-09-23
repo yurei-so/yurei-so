@@ -1,9 +1,12 @@
 name: Refresh profile badges
 
 on:
-  schedule:
-    - cron: "17 8 * * 1"
   workflow_dispatch:
+    inputs:
+      values:
+        description: Optional JSON object containing allowlisted badge values
+        required: false
+        default: "{}"
 
 permissions:
   contents: write
@@ -20,10 +23,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Generate badge row
         env:
-          ROOST_PROFILE_STATS_ENABLED: ${{ vars.ROOST_PROFILE_STATS_ENABLED }}
-          ROOST_PROFILE_STATS_URL: ${{ vars.ROOST_PROFILE_STATS_URL }}
-          ROOST_PROFILE_STATS_TOKEN: ${{ secrets.ROOST_PROFILE_STATS_TOKEN }}
-        run: python3 scripts/generate_profile_badges.py
+          PROFILE_BADGE_VALUES: ${{ inputs.values }}
+        run: python3 scripts/generate_profile_badges.py --values-json "$PROFILE_BADGE_VALUES"
       - name: Test deterministic generation
         run: |
           python3 -m unittest discover -s tests -v

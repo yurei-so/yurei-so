@@ -8,6 +8,7 @@ from scripts.generate_profile_badges import (
     END,
     START,
     load_config,
+    load_values,
     render,
     replace_owned_block,
     safe_aggregate_value,
@@ -46,12 +47,18 @@ class ProfileBadgeTests(unittest.TestCase):
 
     def test_invalid_dynamic_key_is_rejected(self):
         config = json.loads(Path("profile-badges.json").read_text())
-        config["roost"]["aggregates"][0]["key"] = "../../secret"
+        config["dynamic"][0]["key"] = "../../secret"
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "config.json"
             path.write_text(json.dumps(config))
             with self.assertRaises(BadgeConfigError):
                 load_config(path)
+
+    def test_dynamic_input_is_allowlisted_and_bounded(self):
+        values = load_values('{"active_agents": 3, "server_chosen_label": "nope"}', {"active_agents"})
+        self.assertEqual(values, {"active_agents": "3"})
+        with self.assertRaises(BadgeConfigError):
+            load_values('[]', {"active_agents"})
 
 
 if __name__ == "__main__":

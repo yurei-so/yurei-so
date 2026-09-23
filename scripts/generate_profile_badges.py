@@ -5,17 +5,13 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 import sys
 from pathlib import Path
 from typing import Any
-from urllib.error import HTTPError, URLError
 from urllib.parse import quote
-from urllib.request import Request, urlopen
 
 SCHEMA = "yurei-so/profile-badges/v1"
-ROOST_SCHEMA = "runtime-roost/public-profile-aggregates/v1"
 START = "<!-- profile-badges:start -->"
 END = "<!-- profile-badges:end -->"
 COLOR = re.compile(r"^[A-Fa-f0-9]{6}$")
@@ -32,7 +28,7 @@ def load_config(path: Path) -> dict[str, Any]:
         raise BadgeConfigError(f"config schema must be {SCHEMA}")
     if not isinstance(config.get("style"), str) or not config["style"]:
         raise BadgeConfigError("style must be non-empty text")
-    for group in (config.get("static"), config.get("roost", {}).get("aggregates")):
+    for group in (config.get("static"), config.get("dynamic")):
         if not isinstance(group, list):
             raise BadgeConfigError("badge groups must be arrays")
         for badge in group:
@@ -47,11 +43,11 @@ def load_config(path: Path) -> dict[str, Any]:
                 not isinstance(logo_color, str) or not COLOR.fullmatch(logo_color)
             ):
                 raise BadgeConfigError("badge logoColor must be a six-digit hex value")
-    keys = [badge.get("key") for badge in config["roost"]["aggregates"]]
+    keys = [badge.get("key") for badge in config["dynamic"]]
     if any(not isinstance(key, str) or not KEY.fullmatch(key) for key in keys):
-        raise BadgeConfigError("Roost aggregate keys must be bounded snake_case identifiers")
+        raise BadgeConfigError("dynamic badge keys must be bounded snake_case identifiers")
     if len(keys) != len(set(keys)):
-        raise BadgeConfigError("Roost aggregate keys must be unique")
+        raise BadgeConfigError("dynamic badge keys must be unique")
     return config
 
 
@@ -65,29 +61,17 @@ def safe_aggregate_value(value: Any) -> str | None:
     return None
 
 
-def fetch_roost(url: str, token: str, allowed: set[str], timeout: float = 5.0) -> dict[str, str]:
-    if not url.startswith("https://"):
-        raise BadgeConfigError("Roost profile stats URL must use HTTPS")
-    request = Request(url, headers={
-        "accept": "application/json",
-        "authorization": f"Bearer {token}",
-        "user-agent": "yurei-so-profile-badges/1",
-    })
-    with urlopen(request, timeout=timeout) as response:
-        if response.status != 200:
-            raise RuntimeError("Roost profile stats returned a non-success status")
-        body = response.read(65_537)
-    if len(body) > 65_536:
-        raise RuntimeError("Roost profile stats response exceeded 65536 bytes")
-    payload = json.loads(body)
-    if not isinstance(payload, dict) or payload.get("schema") != ROOST_SCHEMA:
-        raise RuntimeError("Roost profile stats returned an unsupported schema")
-    aggregates = payload.get("aggregates")
-    if not isinstance(aggregates, dict):
-        raise RuntimeError("Roost profile stats omitted aggregates")
+def load_values(raw: str | None, allowed: set[str]) -> dict[str, str]:
+    if raw is None:
+        return {}
+    if len(raw.encode("utf-8")) > 4096:
+        raise BadgeConfigError("dynamic badge values exceed 4096 bytes")
+    payload = json.loads(raw)
+    if not isinstance(payload, dict):
+        raise BadgeConfigError("dynamic badge values must be a JSON object")
     result: dict[str, str] = {}
     for key in sorted(allowed):
-        value = safe_aggregate_value(aggregates.get(key))
+        value = safe_aggregate_value(payload.get(key))
         if value is not None:
             result[key] = value
     return result
@@ -120,7 +104,7 @@ def render(config: dict[str, Any], aggregates: dict[str, str] | None = None) -> 
     ) for badge in config["static"])
     if aggregates:
         lines.append("")
-        for badge in config["roost"]["aggregates"]:
+        for badge in config["dynamic"]:
             if badge["key"] in aggregates:
                 lines.append(badge_markdown(
                     badge["label"], aggregates[badge["key"]], badge["color"], style,
@@ -144,22 +128,11 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", type=Path, default=Path("profile-badges.json"))
     parser.add_argument("--readme", type=Path, default=Path("README.md"))
+    parser.add_argument("--values-json", help="optional allowlisted dynamic badge values")
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
     config = load_config(args.config)
-    aggregates: dict[str, str] = {}
-    enabled = os.getenv("ROOST_PROFILE_STATS_ENABLED", "").lower() in {"1", "true", "yes"}
-    url = os.getenv("ROOST_PROFILE_STATS_URL", "")
-    token = os.getenv("ROOST_PROFILE_STATS_TOKEN", "")
-    if enabled and url and token:
-        try:
-            aggregates = fetch_roost(
-                url, token, {badge["key"] for badge in config["roost"]["aggregates"]},
-            )
-        except (BadgeConfigError, HTTPError, URLError, OSError, RuntimeError, json.JSONDecodeError):
-            print("warning: Roost profile stats unavailable; using static badges", file=sys.stderr)
-    elif enabled:
-        print("warning: Roost profile stats are enabled but not configured; using static badges", file=sys.stderr)
+    aggregates = load_values(args.values_json, {badge["key"] for badge in config["dynamic"]})
     before = args.readme.read_text(encoding="utf-8")
     after = replace_owned_block(before, render(config, aggregates))
     if args.check:

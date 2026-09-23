@@ -12,8 +12,7 @@
     { "label": "PyTorch", "color": "EE4C2C", "logo": "pytorch", "logoColor": "FFFFFF" },
     { "label": "Linux", "color": "FCC624", "logo": "linux", "logoColor": "000000" }
   ],
-  "roost": {
-    "aggregates": [
+  "dynamic": [
       {
         "key": "research_experiments_published",
         "label": "experiments published",
@@ -34,6 +33,5 @@
         "label": "crayon confiscations",
         "color": "e83e8c"
       }
-    ]
-  }
+  ]
 }
