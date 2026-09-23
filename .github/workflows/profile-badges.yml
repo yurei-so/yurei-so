@@ -26,9 +26,11 @@ jobs:
           PROFILE_BADGE_VALUES: ${{ inputs.values }}
         run: python3 scripts/generate_profile_badges.py --values-json "$PROFILE_BADGE_VALUES"
       - name: Test deterministic generation
+        env:
+          PROFILE_BADGE_VALUES: ${{ inputs.values }}
         run: |
           python3 -m unittest discover -s tests -v
-          python3 scripts/generate_profile_badges.py --check
+          python3 scripts/generate_profile_badges.py --values-json "$PROFILE_BADGE_VALUES" --check
       - name: Commit an updated row
         run: |
           if git diff --quiet -- README.md; then
