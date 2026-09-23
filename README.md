@@ -11,6 +11,8 @@
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=FFFFFF)
 ![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat-square&logo=linux&logoColor=000000)
 
+![experiments published: 52](https://img.shields.io/badge/experiments%20published-52-6f42c1?style=flat-square)
+
 </div>
 <!-- profile-badges:end -->
 
