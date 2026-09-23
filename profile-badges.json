@@ -15,7 +15,7 @@
   "dynamic": [
       {
         "key": "research_experiments_published",
-        "label": "experiments published",
+        "label": "🧪 experiments published",
         "color": "6f42c1"
       },
       {
@@ -30,7 +30,7 @@
       },
       {
         "key": "crayon_confiscations",
-        "label": "crayon confiscations",
+        "label": "🖍️ crayon confiscations",
         "color": "e83e8c"
       }
   ]

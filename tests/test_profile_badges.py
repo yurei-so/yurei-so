@@ -24,6 +24,8 @@ class ProfileBadgeTests(unittest.TestCase):
         self.assertIn("active%20agents-3", first)
         self.assertIn("logoColor=FFFFFF", first)
         self.assertIn("logoColor=000000", first)
+        self.assertIn("%F0%9F%A7%AA%20experiments%20published", render(config, {"research_experiments_published": "12"}))
+        self.assertIn("%F0%9F%96%8D%EF%B8%8F%20crayon%20confiscations", render(config, {"crayon_confiscations": "1"}))
         self.assertNotIn("unknown_server_key", first)
 
     def test_replacement_changes_only_the_owned_marker_block(self):
