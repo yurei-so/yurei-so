@@ -1,0 +1,40 @@
+name: Refresh profile badges
+
+on:
+  schedule:
+    - cron: "17 8 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-badges
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Generate badge row
+        env:
+          ROOST_PROFILE_STATS_ENABLED: ${{ vars.ROOST_PROFILE_STATS_ENABLED }}
+          ROOST_PROFILE_STATS_URL: ${{ vars.ROOST_PROFILE_STATS_URL }}
+          ROOST_PROFILE_STATS_TOKEN: ${{ secrets.ROOST_PROFILE_STATS_TOKEN }}
+        run: python3 scripts/generate_profile_badges.py
+      - name: Test deterministic generation
+        run: |
+          python3 -m unittest discover -s tests -v
+          python3 scripts/generate_profile_badges.py --check
+      - name: Commit an updated row
+        run: |
+          if git diff --quiet -- README.md; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "Refresh profile badges"
+          git push

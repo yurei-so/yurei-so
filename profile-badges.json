@@ -1,0 +1,39 @@
+{
+  "schema": "yurei-so/profile-badges/v1",
+  "style": "flat-square",
+  "static": [
+    { "label": "TypeScript", "color": "3178C6", "logo": "typescript", "logoColor": "FFFFFF" },
+    { "label": "Python", "color": "3776AB", "logo": "python", "logoColor": "FFFFFF" },
+    { "label": "Kotlin", "color": "7F52FF", "logo": "kotlin", "logoColor": "FFFFFF" },
+    { "label": "C++", "color": "00599C", "logo": "cplusplus", "logoColor": "FFFFFF" },
+    { "label": "Go", "color": "00ADD8", "logo": "go", "logoColor": "FFFFFF" },
+    { "label": "Node.js", "color": "339933", "logo": "nodedotjs", "logoColor": "FFFFFF" },
+    { "label": "PostgreSQL", "color": "4169E1", "logo": "postgresql", "logoColor": "FFFFFF" },
+    { "label": "PyTorch", "color": "EE4C2C", "logo": "pytorch", "logoColor": "FFFFFF" },
+    { "label": "Linux", "color": "FCC624", "logo": "linux", "logoColor": "000000" }
+  ],
+  "roost": {
+    "aggregates": [
+      {
+        "key": "research_experiments_published",
+        "label": "experiments published",
+        "color": "6f42c1"
+      },
+      {
+        "key": "active_agents",
+        "label": "active agents",
+        "color": "00a6a6"
+      },
+      {
+        "key": "days_since_last_what_if",
+        "label": "days since last what if",
+        "color": "d97706"
+      },
+      {
+        "key": "crayon_confiscations",
+        "label": "crayon confiscations",
+        "color": "e83e8c"
+      }
+    ]
+  }
+}
