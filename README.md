@@ -11,7 +11,7 @@
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=FFFFFF)
 ![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat-square&logo=linux&logoColor=000000)
 
-![🧪 experiments published: 56](https://img.shields.io/badge/%F0%9F%A7%AA%20experiments%20published-56-6f42c1?style=flat-square)
+![🧪 experiments published: 62](https://img.shields.io/badge/%F0%9F%A7%AA%20experiments%20published-62-6f42c1?style=flat-square)
 ![🖍️ crayon confiscations: 1](https://img.shields.io/badge/%F0%9F%96%8D%EF%B8%8F%20crayon%20confiscations-1-e83e8c?style=flat-square)
 
 </div>
